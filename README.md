@@ -73,9 +73,7 @@ sco.plot()
 ## Development
 
 ```bash
-pip install -e ".[test]" ruff mypy
-ruff check src/ tests/      # lint
-ruff format src/ tests/     # format
+pip install -e ".[test]" mypy
 mypy src/pathsim_toolbox    # type check
 pytest tests/ -v            # run tests
 ```
