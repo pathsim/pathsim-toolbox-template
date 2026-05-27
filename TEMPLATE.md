@@ -42,7 +42,42 @@ repo, removes the template banner from `README.md`, and finally deletes
   PathSim core example; replace it with notebooks that demonstrate your
   blocks. Every `*.ipynb` here is executed and rendered by the docs build.
 
-## 4. Register with the docs build
+## 4. Stay compatible with the web runtime
+
+PathView ships a browser build that runs Python through Pyodide. Pure-Python
+toolboxes load there out of the box, but dependencies that ship native code
+(`pybamm`, `jsbsim`, `casadi`, anything that needs a compiled wheel) fail to
+install in the browser.
+
+Default `pip install pathsim-<name>` on Linux/macOS/Windows should still
+install everything — no extras required. To get there:
+
+1. **Mark heavy dependencies in `pyproject.toml`** with a PEP 508 environment
+   marker so micropip (Pyodide) silently skips them:
+
+   ```toml
+   dependencies = [
+       "pathsim>=0.22",
+       "numpy>=1.15",
+       "pybamm>=25.12; sys_platform != 'emscripten'",
+   ]
+   ```
+
+2. **Guard the re-export in `src/pathsim_<name>/__init__.py`** so the rest of
+   the toolbox stays importable when the heavy dep is missing:
+
+   ```python
+   try:
+       from .cells import CellElectrical
+       __all__ += ["CellElectrical"]
+   except ImportError:
+       pass
+   ```
+
+In PathView's web Toolbox Manager, introspection then finds only the blocks
+whose submodules imported successfully; the desktop install sees everything.
+
+## 5. Register with the docs build
 
 The documentation site (`docs.pathsim.org`) is built by the
 [`pathsim/docs`](https://github.com/pathsim/docs) repository. It clones every
@@ -70,7 +105,7 @@ The repo-side docs contract is just: an importable package under `src/` and
 `*.ipynb` files under `docs/source/examples/`. No Sphinx — the docs build owns
 all rendering.
 
-## 5. Releasing
+## 6. Releasing
 
 `.github/workflows/publish.yml` publishes to PyPI via trusted publishing when
 a GitHub Release is published. Versions come from git tags via `setuptools-scm`,
