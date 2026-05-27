@@ -27,6 +27,17 @@ classifiers = [
 dependencies = [
     "pathsim>=0.22",
     "numpy>=1.15",
+    # If your toolbox needs a dependency that ships native code (e.g.
+    # pybamm, jsbsim, casadi, …) it will fail to install in Pyodide. Tag
+    # it with a PEP 508 environment marker so a normal pip install on
+    # Linux/macOS/Windows still pulls it eagerly, but micropip in the
+    # browser silently skips it. Example:
+    #
+    #     "pybamm>=25.12; sys_platform != 'emscripten'",
+    #
+    # Pair this with a defensive `try/except ImportError` re-export in
+    # `src/pathsim_<name>/__init__.py` so the rest of the toolbox stays
+    # importable when the heavy dependency is absent.
 ]
 
 [project.optional-dependencies]
