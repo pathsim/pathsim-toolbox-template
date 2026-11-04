@@ -36,6 +36,13 @@ repo, removes the template banner from `README.md`, and finally deletes
 - `src/pathsim_<name>/example_block.py` — replace `FirstOrderLag` with your
   real blocks. Keep the structure: header comment, docstring documenting
   math / parameters / ports, input validation, `*_port_labels`.
+- `src/pathsim_<name>/icons/` — one SVG icon per block class, named
+  `<ClassName>.svg`. `Block.icon()` (pathsim 0.30 and later) reads it from
+  there and PathView shows it on the canvas. Follow the core icons in
+  [`pathsim/icons`](https://github.com/pathsim/pathsim/tree/master/src/pathsim/icons):
+  viewBox `0 0 96 64`, `fill="none" stroke="currentColor" stroke-width="1.6"`,
+  no colors, since the editor sets them. Blocks without a file have no icon,
+  and subclasses don't inherit the icon of their parent.
 - `tests/` — mirror the structure of `src/`. Tests run with both `unittest`
   and `pytest`; physics is verified through a full `Simulation`.
 - `docs/source/examples/` — example notebooks. The placeholder is a copied
@@ -111,4 +118,5 @@ all rendering.
 a GitHub Release is published. Versions come from git tags via `setuptools-scm`,
 so tag releases as `vX.Y.Z`. Configure a
 [PyPI trusted publisher](https://docs.pypi.org/trusted-publishers/) for the
-project pointing at this repo and the `publish.yml` workflow.
+project pointing at this repo, the `publish.yml` workflow and the `pypi`
+environment.

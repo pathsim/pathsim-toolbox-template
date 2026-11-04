@@ -29,6 +29,10 @@ class TestFirstOrderLagInit(unittest.TestCase):
         with self.assertRaises(ValueError):
             FirstOrderLag(tau=-1.0)
 
+    def test_icon(self):
+        # read from src/pathsim_toolbox/icons by Block.icon()
+        self.assertTrue(FirstOrderLag.icon().startswith("<svg"))
+
 
 class TestFirstOrderLagSimulation(unittest.TestCase):
     """Physics tests run via a full PathSim Simulation."""
